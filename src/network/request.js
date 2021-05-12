@@ -5,7 +5,7 @@ import axios from 'axios'
 export function request(config) {
   // 4 - 创建实例化axios
   const instance = axios.create({
-    baseURL: 'http://152.136.185.210:7878/api/m5/',
+    baseURL: 'http://152.136.185.210:7878/api/m5',
     timeout: 5000
   })
   // 6 - 请求拦截
