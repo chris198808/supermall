@@ -28,6 +28,7 @@ export default {
   methods: {
     getTabActive(index) {
       this.currentIndex = index;
+      this.$emit("TabName", index);
       // console.log(this.currentIndex);
     },
   },
