@@ -1,6 +1,6 @@
 <template>
-  <div class="goods-list-item">
-    <a :href="item.link"><img :src="item.show.img" :alt="item.title" /></a>
+  <div class="goods-list-item" @click="skipDetail">
+    <img @load="goodsImageLoad" :src="item.show.img" :alt="item.title" />
     <div class="goods-info">
       <p>{{ item.title }}</p>
       <span class="price">{{ item.price }}</span>
@@ -16,6 +16,16 @@ export default {
       default() {
         return {};
       },
+    },
+  },
+  methods: {
+    goodsImageLoad() {
+      this.$bus.$emit("goodsImagesLoad");
+      // console.log("图片加载完毕");
+    },
+    skipDetail() {
+      // 需要有返回，使用push设置跳转，replace设置没有返回
+      this.$router.push("/detail/" + this.item.iid);
     },
   },
 };
