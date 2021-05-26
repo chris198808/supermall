@@ -12,7 +12,7 @@
     />
     <better-scroll
       class="wrapper"
-      ref="bscroll"
+      ref="scroll"
       :probe-type="3"
       @scroll="getScroll"
       :pull-up-load="true"
@@ -49,6 +49,8 @@ import HomeFeature from "./childComponents/HomeFeature";
 // 引入的方法
 import { getHomeMultidata, getHomeGoodsData } from "network/home.js";
 import { debounce } from "common/utils.js";
+import { mixin } from "common/mixin";
+
 export default {
   data() {
     return {
@@ -111,7 +113,7 @@ export default {
       this.$refs.tabControl2.currentIndex = index;
     },
     backTop() {
-      this.$refs.bscroll.getBackTop(0, 0);
+      this.$refs.scroll.getBackTop(0, 0);
     },
     getScroll(position) {
       // console.log(-position.y);
@@ -121,7 +123,7 @@ export default {
       // 当getScroll滚动到tabControl.offsetTop的位置 537，固定tabControl
       /**
        * 产生的效果，由于固定定位脱离标准流，分类栏 到达指定位置后 一闪消失。
-       * bscroll用的是translate滚动，translate滚动对固定定位的元素也进行移动，可能已经移动到其他位置。
+       * scroll用的是translate滚动，translate滚动对固定定位的元素也进行移动，可能已经移动到其他位置。
        * 使用以上方法无效。
        *
        * 解决方案：
@@ -135,12 +137,12 @@ export default {
     pullingUp() {
       this.getHomeGoodsData(this.currentTabName);
       // console.log("home 上拉刷新");
-      this.$refs.bscroll.finishPullUp();
+      this.$refs.scroll.finishPullUp();
     },
     swiperImageLoad() {
       // console.log("swiperImageLoad");
-      this.$refs.bscroll.refresh();
-      // debounce(this.$refs.bscroll.refresh, 5000);
+      this.$refs.scroll.refresh();
+      // debounce(this.$refs.scroll.refresh, 5000);
       // console.log(this.$refs.tabControl2.$el.offsetTop);
       this.tabControlOffTop = this.$refs.tabControl2.$el.offsetTop;
     },
@@ -180,28 +182,20 @@ export default {
     this.getHomeGoodsData("new");
     this.getHomeGoodsData("sell");
   },
-  mounted() {
-    // console.log(this.$bus);
-    const refresh = debounce(this.$refs.bscroll.refresh, 500);
-    this.$bus.$on("goodsImagesLoad", () => {
-      // this.$refs.bscroll.refresh();
-      // 对实时监听的图片是否加载完毕进行防抖操作
-      // console.log(this.$refs.bscroll.refresh);
-      // debounce(this.$refs.bscroll.refresh, 300);
-      refresh();
-    });
-  },
+  mixins: [mixin],
   activated() {
     // 解决有时候会返回到顶部问题：先刷新一下，重新把高度算一遍
-    this.$refs.bscroll.refresh();
+    this.$refs.scroll.refresh();
     // 激活组件时将跳转到离开时Y轴的值
-    this.$refs.bscroll.getBackTop(0, this.y);
+    this.$refs.scroll.getBackTop(0, this.y);
     console.log("组件被激活.Y:" + this.y);
   },
   deactivated() {
     // 离开组件记录当前Y轴滚动的状态
-    this.y = this.$refs.bscroll.getScrollY();
+    this.y = this.$refs.scroll.getScrollY();
     console.log("组件失去激活状态.Y:" + this.y);
+    // 离开组件，销毁 图片加载完成后刷新事件
+    this.$bus.$off("goodsImageLoad", this.imgLoadListener);
   },
 };
 </script>

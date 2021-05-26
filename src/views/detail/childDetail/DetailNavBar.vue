@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     back() {
-      history.go(-1);
+      this.$router.go(-1);
     },
     getTabTitle(index) {
       this.currentIndex = index;

@@ -22,16 +22,16 @@ export default {
       type: Number,
       defalut: 0,
     },
-    // 有些界面不需要上拉加载功能，为了性能应该考虑关闭
+    // 有些界面不需要上拉加载功能，为了性能应该考虑关闭 Scroll 2.0 必须设置为true
     pullUpLoad: {
       type: Boolean,
-      defalut: false,
+      default: true,
     },
   },
   mounted() {
     // 1-创建 BScroll 对象
     const bscroll = new BScroll(this.$refs.wrapper, {
-      observeDOM: true,
+      // observeDOM: true,
       // observeImage: true,
       click: true,
       probeType: this.probeType,

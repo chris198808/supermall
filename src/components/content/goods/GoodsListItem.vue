@@ -1,6 +1,7 @@
 <template>
   <div class="goods-list-item" @click="skipDetail">
-    <img @load="goodsImageLoad" :src="item.show.img" :alt="item.title" />
+    <!-- <img @load="goodsImageLoad" :src="item.show.img" :alt="item.title" /> -->
+    <img @load="goodsImageLoad" :src="detailImg" :alt="item.title" />
     <div class="goods-info">
       <p>{{ item.title }}</p>
       <span class="price">{{ item.price }}</span>
@@ -18,14 +19,34 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      isPath: this.$route.path,
+    };
+  },
+  computed: {
+    detailImg() {
+      // 自己的思路
+      // if (this.isPath == "/home") {
+      //   console.log(this.isPath);
+      //   return this.item.show.img;
+      // } else if (this.isPath == "/detail") {
+      //   console.log(this.isPath);
+      //   return this.item.image;
+      // }
+
+      // 老师的思路
+      return this.item.image || this.item.show.img;
+    },
+  },
   methods: {
     goodsImageLoad() {
-      this.$bus.$emit("goodsImagesLoad");
-      // console.log("图片加载完毕");
+      this.$bus.$emit("goodsImageLoad");
     },
     skipDetail() {
       // 需要有返回，使用push设置跳转，replace设置没有返回
-      this.$router.push("/detail/" + this.item.iid);
+      // this.$router.push("/detail/" + this.item.iid);
+      this.$router.push({ path: "/detail", query: { iid: this.item.iid } });
     },
   },
 };
