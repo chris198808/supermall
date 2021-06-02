@@ -43,12 +43,13 @@ export default {
     },
     getTabTitle(index) {
       this.currentIndex = index;
+      this.$emit("offTop", index);
     },
   },
 };
 </script>
 
-<style scoped>
+<style scoped> 
 .back {
   padding-top: 4px;
   text-align: center;

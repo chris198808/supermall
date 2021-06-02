@@ -21,9 +21,11 @@ export class GoodsBaseInfos {
     // 标题
     this.title = itemInfo.title
     // 价格
-    this.price = itemInfo.price
+    this.lowNowPrice = itemInfo.lowNowPrice
     // 原价格
     this.oldPrice = itemInfo.oldPrice
+    // 描述
+    this.desc = itemInfo.desc
     // 折扣说明 可能不存在 （记得判断）
     this.discountDesc = itemInfo.discountDesc
     // 销量 收藏 退货说明 

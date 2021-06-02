@@ -59,7 +59,7 @@ export default {
       this.bscroll && this.bscroll.finishPullUp();
     },
     refresh() {
-      console.log("图片加载完毕~");
+      // console.log("图片加载完毕~");
       this.bscroll && this.bscroll.refresh();
     },
     getScrollY() {

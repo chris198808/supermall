@@ -14,7 +14,7 @@
       class="wrapper"
       ref="scroll"
       :probe-type="3"
-      @scroll="getScroll"
+      @scroll="scroll"
       :pull-up-load="true"
       @pullingUp="pullingUp"
     >
@@ -33,13 +33,14 @@
   </div>
 </template>
 <script>
+// 常量
+import { BACK_TOP } from "common/const"
 // 公共组件 common-公共组件，content-本项目相关的业务组件
 import NavBar from "components/common/navbar/NavBar";
 import TabBar from "components/common/tabbar/TabBar";
 import BetterScroll from "components/common/scroll/BetterScroll";
 import TabControl from "components/content/TabControl";
 import GoodsList from "components/content/goods/GoodsList";
-import BackTop from "components/content/BackTop";
 
 // 本页面的子组件
 import HomeSwiper from "./childComponents/HomeSwiper";
@@ -47,9 +48,8 @@ import HomeRecommend from "./childComponents/HomeRecommend";
 import HomeFeature from "./childComponents/HomeFeature";
 
 // 引入的方法
-import { getHomeMultidata, getHomeGoodsData } from "network/home.js";
-import { debounce } from "common/utils.js";
-import { mixin } from "common/mixin";
+import { getHomeMultidata, getHomeGoodsData } from "network/home.js"; 
+import { mixin,backTop } from "common/mixin";
 
 export default {
   data() {
@@ -74,11 +74,11 @@ export default {
       currentTabName: "pop",
       // 是否显示返回顶部图标
       isShow: false,
-      isfixed: false,
       // TabControl与顶部的距离
       tabControlOffTop: 0,
       // 记录离开时Y轴的值
       y: 0,
+      isfixed: false
     };
   },
   components: {
@@ -88,7 +88,6 @@ export default {
     BetterScroll,
     TabControl,
     GoodsList,
-    BackTop,
 
     // 当前页面子组件
     HomeSwiper,
@@ -112,15 +111,12 @@ export default {
       this.$refs.tabControl1.currentIndex = index;
       this.$refs.tabControl2.currentIndex = index;
     },
-    backTop() {
-      this.$refs.scroll.getBackTop(0, 0);
-    },
-    getScroll(position) {
+    scroll(position) {
       // console.log(-position.y);
       // 默认backTop图标隐藏
-      // 如果y轴滚动到800，则显示 backTop 图标
-      this.isShow = -position.y > 800;
-      // 当getScroll滚动到tabControl.offsetTop的位置 537，固定tabControl
+      // 如果y轴滚动到600，则显示 backTop 图标 
+      this.isShow = -position.y > BACK_TOP;
+      // 当scroll滚动到tabControl.offsetTop的位置 537，固定tabControl
       /**
        * 产生的效果，由于固定定位脱离标准流，分类栏 到达指定位置后 一闪消失。
        * scroll用的是translate滚动，translate滚动对固定定位的元素也进行移动，可能已经移动到其他位置。
@@ -133,7 +129,7 @@ export default {
       // 得到 tabControl元素 与顶部的距离
       // console.log("得到 tabControl元素 与顶部的距离" + this.tabControlOffTop);
       this.isfixed = -position.y >= this.tabControlOffTop;
-    },
+    }, 
     pullingUp() {
       this.getHomeGoodsData(this.currentTabName);
       // console.log("home 上拉刷新");
@@ -182,7 +178,7 @@ export default {
     this.getHomeGoodsData("new");
     this.getHomeGoodsData("sell");
   },
-  mixins: [mixin],
+  mixins: [mixin,backTop],
   activated() {
     // 解决有时候会返回到顶部问题：先刷新一下，重新把高度算一遍
     this.$refs.scroll.refresh();

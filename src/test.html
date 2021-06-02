@@ -35,6 +35,23 @@
     personA = new PersonA()
     console.log(personA.run());
 
+
+    const arr = [{name:'张三'},{name:'李四'}]
+    const obj01 = {name:'王五',age:18}
+    for(item in arr){
+      console.log(item); //0,1
+    }
+    for(item in obj01){
+      console.log(item); //name age
+    }
+    for(item of arr){
+      console.log(item); //{name:'张三'} {name:'李四'}
+    }
+
+    // for of不能对象用
+    for(item of obj01){
+      console.log(item);//王五
+    }
   </script>
 </body>
 

@@ -1,6 +1,7 @@
-import {
-  debounce
-} from "common/utils.js";
+import BackTop from "components/content/BackTop";
+import { debounce } from "common/utils.js";
+
+
 export const mixin = {
   data() {
     return {
@@ -24,4 +25,20 @@ export const mixin = {
 
     this.$bus.$on("goodsImageLoad", this.imgLoadListener);
   },
+}
+export const backTop = {
+  data() {
+    return {
+      isShow:false
+    }
+  },
+  components: {
+    BackTop,
+  },
+  methods: { 
+    backTop() {
+      this.$refs.scroll.getBackTop(0, 0);
+    },
+  },
+  
 }
