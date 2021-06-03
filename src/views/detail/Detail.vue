@@ -16,8 +16,11 @@
     </better-scroll>
     <!-- 底端工具栏 -->
     <detail-bottom-nav @addCart="addCart"/>
-      <!-- 返回顶部 -->
-      <back-top v-show="isShow" @click.native="backTop"/>
+    <!-- 返回顶部 -->
+    <back-top v-show="isShow" @click.native="backTop"/>
+
+    <!-- 提示框 -->
+    <toast :is-show-toast="isShowToast" :toast-info="toastInfo"/>
   </div>
 </template>
 
@@ -26,8 +29,11 @@
 import { BACK_TOP } from "common/const"
 // 公共组件
 import BetterScroll from "components/common/scroll/BetterScroll"; 
+import Toast from "components/common/toast/Toast"
 // 公共方法
 import { mixin,backTop } from "common/mixin";
+// 映射Vuex中的actions方法
+import { mapActions } from "vuex"
 // 数据请求
 import { getDetailData, getRecommend, GoodsBaseInfos } from "network/detail";
 // 当前页面子组件
@@ -65,11 +71,14 @@ export default {
       offTopArr: [],
       // 当前标题和内容联动
       currentIndex: 0, 
+      isShowToast: false,
+      toastInfo: ""
     };
   },
   components: {
     // 公共组件
     BetterScroll, 
+    Toast,
 
     // 本页面子组件
     DetailNavBar,
@@ -145,6 +154,7 @@ export default {
        
     },
     addCart(){
+      
       // 将购物车列表需要的数据打包传递
       // iid,产品图片1张，标题，描述，价格
       const pro = {}
@@ -155,8 +165,25 @@ export default {
       pro.desc = this.goodsBaseInfo.desc
       // console.log(pro);
 
-      // this.$store.commit('addCart',pro)
-      this.$store.dispatch('addCart',pro)
+       // 1- 数据处理完成，通过promise返回 文本信息 
+      this.$store.dispatch('addCart',pro).then(res=>{
+
+        // 1-普通方式 使用 toast
+        /**
+         this.toastInfo = res 
+        this.isShowToast = true
+
+        setTimeout(()=>{
+          this.isShowToast = false
+          this.toastInfo = ""
+        },1500)
+         */
+        // 2-组件封装的插件
+       
+      
+      // 将文本信息 传给 Toast.vue
+      this.$toast.showToast(res,2000)
+      })
     },
     // 轮播图图片加载完成refresh
     swiperImgLoad(){
